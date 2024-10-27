@@ -1,0 +1,142 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+  .check svg {
+    position: relative;
+    z-index: 1;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.5;
+    transform: translate3d(0, 0, 0);
+    transition: all 0.2s ease;
+  }
+  
+  .check svg path {
+    stroke-dasharray: 60;
+    stroke-dashoffset: 0;
+  }
+  
+  .check svg polyline {
+    stroke-dasharray: 22;
+    stroke-dashoffset: 66;
+  }
+  .check:hover svg {
+    stroke: #4285f4;
+  }
+  
+  #cbx:checked + .check svg {
+    stroke: #4285f4;
+  }
+  
+  #cbx:checked + .check svg path {
+    stroke-dashoffset: 60;
+    transition: all 0.3s linear;
+  }
+  
+  #cbx:checked + .check svg polyline {
+    stroke-dashoffset: 42;
+    transition: all 0.2s linear;
+    transition-delay: 0.15s;
+  }
+  .signUp{
+    position: relative;
+    z-index: 999;
+  }
+  .signUp::after{
+    content: '';
+    position: absolute;
+    width: 0%;
+    height: 100%;
+    top: 0;
+    left: 50%;
+    background: #3B82F6;
+    transition: all linear .3s;
+    z-index: -1;
+  }
+  .signUp:hover::after{
+    width: 50%;
+  }
+  .signUp::before{
+    content: '';
+    position: absolute;
+    width: 0%;
+    height: 100%;
+    top: 0;
+    right: 50%;
+    background: #3B82F6;
+    transition: all linear .3s;
+    z-index: -1;
+  }
+  .signUp:hover::before{
+    width: 50%;
+  }
+.registrationLeft{
+animation: 15s linear imganimation infinite;
+}
+.registration-Night{
+  border-image: fill 0 linear-gradient(#0001, #000);
+}
+@keyframes imganimation {
+  0%{
+    background: url(../src/Component/RegistrationComponent/RegistrationLeft/RegistrationLeftImage/1.png) no-repeat center bottom;
+    background-size: cover;
+  }
+  20%{
+    background: url(../src/Component/RegistrationComponent/RegistrationLeft/RegistrationLeftImage/2.png) no-repeat center bottom;
+    background-size: cover;
+  }
+  40%{
+    background: url(../src/Component/RegistrationComponent/RegistrationLeft/RegistrationLeftImage/3.png) no-repeat center bottom;
+    background-size: cover;
+  }
+  60%{
+    background: url(../src/Component/RegistrationComponent/RegistrationLeft/RegistrationLeftImage/4.png) no-repeat center bottom;
+    background-size: cover;
+  }  80%{
+    background: url(../src/Component/RegistrationComponent/RegistrationLeft/RegistrationLeftImage/5.png) no-repeat center bottom;
+    background-size: cover;
+  }  100%{
+    background: url(../src/Component/RegistrationComponent/RegistrationLeft/RegistrationLeftImage/3.png) no-repeat center bottom;
+    background-size: cover;
+  }
+}
+.Day-Background{
+  background: white;
+}
+.Night-Background{
+  background: #212428;
+}
+.day-text{
+  color: black;
+}
+.night-text{
+  color: white;
+}
+.rotate{
+  animation: .3s linear theme;
+}
+@keyframes theme{
+  0%{
+    transform: rotate(0deg);
+  }100%{
+    transform: rotate(360deg);
+  }
+}
+.day-rotate{
+  animation: .3s linear day-theme;
+}
+@keyframes day-theme{
+  0%{
+    transform: rotate(0deg);
+  }100%{
+    transform: rotate(360deg);
+  }
+}
+.daypath path {
+  stroke: rgb(0, 0, 0);
+}
+.nightpath path{
+  stroke: #3B82F6;
+}
