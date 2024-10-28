@@ -11,9 +11,12 @@ import { useTheme } from '../../../Theme/ThemeContext';
 import moment from 'moment';
 import Logo from './RegistrationRightImage/Logo.png';
 import darkmodeLogo from './RegistrationRightImage/darkmodeLogo.png'
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 const RegistrationRight = () => {
   const auth = getAuth();
   const db = getDatabase();
+  const Navigate = useNavigate();
   const animationContainer = useRef(null);
   const animationInstance = useRef(null);
   const [isEyeOpen, setIsEyeOpen] = useState(false);
@@ -86,6 +89,7 @@ const handleSignUp = () => {
       });
     }).then(() =>{
       sendEmailVerification(auth.currentUser).then(() =>{
+        Navigate('/login')
         infoToast(`${auth.currentUser.displayName} please Check Your Email`)
       })
     }).then(() =>{
@@ -128,7 +132,7 @@ const handleCheckbox = () =>{
           </div>
           <h2 className={`${!darkMode ? 'day-text' : 'night-text'} text-[22px] font-semibold font-Poppins`}>Sign up</h2>
           <p className={`${!darkMode ? 'day-text' : 'night-text'} text-sm font-normal font-Poppins mt-1 mb-3`}>
-            Already have an account? <span className='font-semibold text-[#38CB89] cursor-pointer'>Sign in</span>
+            Already have an account? <span className='font-semibold text-[#38CB89] cursor-pointer'><Link to={'/login'}>Sign in</Link></span>
           </p>
         </div>
         <div>
@@ -137,7 +141,7 @@ const handleCheckbox = () =>{
             <input
             type="name"
             name="name"
-            className = {`${!fullNameError ? 'border-gray-300' : 'dark:border-red-600'} ${!darkMode ? 'day-text' : 'night-text'} block py-2.5 px-0 w-full text-base  text-gray-900 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer`}
+            className = {`${!fullNameError ? 'border-gray-300' : 'dark:border-red-600 mb-7'} ${!darkMode ? 'day-text' : 'night-text'} block py-2.5 px-0 w-full text-base  text-gray-900 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer`}
             placeholder=" "
             value={fullName}
             onChange={(e) => setfullName(e.target.value)}
@@ -151,7 +155,7 @@ const handleCheckbox = () =>{
           <input
             type="email"
             name='email'
-            className={`${!emailError ? 'border-gray-300' : 'dark:border-red-600'} ${!darkMode ? 'text-gray-900' : 'night-text'} block py-2.5 px-0 w-full text-base !bg-transparent border-0 border-b-2  appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer`}
+            className={`${!emailError ? 'border-gray-300' : 'dark:border-red-600 mb-7'} ${!darkMode ? 'text-gray-900' : 'night-text'} block py-2.5 px-0 w-full text-base !bg-transparent border-0 border-b-2  appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer`}
             placeholder=" "
             value={email}
             onChange={(e) => setemail(e.target.value)}
@@ -164,7 +168,7 @@ const handleCheckbox = () =>{
         <div className="relative z-0 w-full mb-5 group">
           <input
             type={isEyeOpen ? 'text' : 'password'}
-            className={`${!passwordError ? 'border-gray-300' : 'dark:border-red-600'} ${!darkMode ? 'text-gray-900' : 'night-text'} block py-2.5 px-0 w-full text-base  !bg-transparent border-0 border-b-2  appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer`}
+            className={`${!passwordError ? 'border-gray-300' : 'dark:border-red-600 mb-7'} ${!darkMode ? 'text-gray-900' : 'night-text'} block py-2.5 px-0 w-full text-base  !bg-transparent border-0 border-b-2  appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer`}
             placeholder=" "
             value={Password}
             onChange={(e) => setPassword(e.target.value)}

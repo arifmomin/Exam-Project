@@ -2,7 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-  .check svg {
+@import url('https://fonts.googleapis.com/css2?family=Inknut+Antiqua:wght@300;400;500;600;700;800;900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap'); 
+.check svg {
     position: relative;
     z-index: 1;
     fill: none;
@@ -139,4 +140,77 @@ animation: 15s linear imganimation infinite;
 }
 .nightpath path{
   stroke: #3B82F6;
+}
+.redpath path{
+  stroke: red;
+}
+
+.Fire-Text{
+  background-image: url(./Component/LoginComponent/LoginRightComponent/LoginRightImage/tenor.gif);
+  background-position: center;
+  background-size: cover;
+   background-clip: text;
+   -webkit-background-clip: text;
+}
+.wrapper .icon {
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+  transition: all 2s cubic-bezier(0.68, -0.55, 0.65, 1.55);
+}
+.wrapper .tooltip-hover{
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+}
+.wrapper .tooltip-hover::after{
+  position: absolute;
+  content: '';
+  height: 8px;
+  width: 8px;
+  background: #ffffff;
+  left: 50%;
+  bottom: -3px;
+  transform: translate(-50%) rotate(45deg);
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+.wrapper .icon:hover .tooltip-hover{
+  top: -45px;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+.wrapper .icon:hover span,
+.wrapper .icon:hover .tooltip-hover{
+  text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.1);
+}
+.LoginRightBgImage{
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  animation: 20s linear LoginRightAnimation infinite;
+  background-size: cover;
+}
+@keyframes LoginRightAnimation{
+  0%{
+    background: url(../src/Component/LoginComponent/LoginRightComponent/LoginRightImage/3.png) no-repeat center bottom;
+      background-size: cover;
+  }
+  20%{
+    background: url(../src/Component/LoginComponent/LoginRightComponent/LoginRightImage/4.png) no-repeat center bottom;
+      background-size: cover;
+  }
+  40%{
+    background: url(../src/Component/LoginComponent/LoginRightComponent/LoginRightImage/1.png) no-repeat center bottom;
+      background-size: cover;
+  }
+  60%{
+    background: url(../src/Component/LoginComponent/LoginRightComponent/LoginRightImage/2.png) no-repeat center bottom;
+      background-size: cover;
+  }
+  80%{
+    background: url(../src/Component/LoginComponent/LoginRightComponent/LoginRightImage/5.png) no-repeat center bottom;
+      background-size: cover;
+  }
+  100%{
+    background: url(../src/Component/LoginComponent/LoginRightComponent/LoginRightImage/6.png) no-repeat center bottom;
+    background-size: cover;
+  }
 }
