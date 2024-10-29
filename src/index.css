@@ -214,3 +214,24 @@ animation: 15s linear imganimation infinite;
     background-size: cover;
   }
 }
+.modalimage{
+	-webkit-filter: grayscale(100%);
+	filter: grayscale(100%);
+	-webkit-transition: .3s ease-in-out;
+	transition: .3s ease-in-out;
+}
+
+.modalimageParrent:hover img {
+	-webkit-filter: grayscale(0);
+	filter: grayscale(0);
+}
+.zoom-div:hover .zoom-image-text{
+  opacity: 100;
+  display: block;
+}
+.zoom-div .zoom-image-text span{
+  transition: all linear .3s;
+}
+.zoom-div:hover .zoom-image-text span{
+  transform: translateY(0);
+}

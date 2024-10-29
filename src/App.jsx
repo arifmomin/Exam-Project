@@ -12,7 +12,10 @@ import {
 import { Home } from './Home/Home.jsx';
 const App = () => {
 
-const router = createBrowserRouter ([
+const router = createBrowserRouter ([{
+  path: '/',
+  element : 'nothing is here'
+},
   {
     path: 'registration/',
     element: <Registration/>,
@@ -23,7 +26,7 @@ const router = createBrowserRouter ([
     path : '/home',
     element : <Home/>
   }
-])
+]);
 
   return (
     <ThemeProvider>

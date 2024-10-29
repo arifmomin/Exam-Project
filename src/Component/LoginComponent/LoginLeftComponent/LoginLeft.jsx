@@ -15,9 +15,11 @@ import { FaFacebook } from 'react-icons/fa';
 import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, FacebookAuthProvider  } from "firebase/auth";
 import { push,getDatabase, ref, set } from 'firebase/database';
 import moment from 'moment';
+import { useNavigate } from 'react-router-dom';
 const LoginLeft = () => {
 const auth = getAuth()
 const db = getDatabase();
+const Navigate = useNavigate();
 const {darkMode} = useTheme();
 const animationContainer = useRef(null);
 const animationInstance = useRef(null);
@@ -104,7 +106,8 @@ const handleGoogleLogin = (() =>{
       CreateAtt : moment().format(" MM DD YYYY, h:mm:ss a")
     })
   }).then(() =>{
-    SuccessToast('Log In Successful')
+    SuccessToast('Log In Successful');
+    Navigate('/home');
   })
   .catch((error) => {
     const errorCode = error.code;
