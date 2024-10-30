@@ -1,27 +1,19 @@
 import React, { useEffect, useRef, useState } from 'react';
-import image1 from './HomePageImages/1.jpg';
-import image2 from './HomePageImages/2.jpg';
-import image3 from './HomePageImages/3.jpg';
-import image4 from './HomePageImages/4.jpg';
-import image5 from './HomePageImages/5.jpg';
-import image6 from './HomePageImages/6.jpg';
-import image7 from './HomePageImages/7.jpg';
-import image8 from './HomePageImages/8.jpg';
-import image9 from './HomePageImages/9.jpg';
 import Modal from 'react-modal';
 import { FiUpload } from 'react-icons/fi';
 import { RxCross2 } from 'react-icons/rx';
 import { IoCloudUploadOutline, IoPerson } from 'react-icons/io5';
 import { getDatabase, push, ref as projectref, onValue, set, remove } from "firebase/database";
 import { ErrorToast, SuccessToast } from '../../Utilities/Toastify/Toastify';
-import { getAuth } from 'firebase/auth';
 import moment from 'moment';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import {RotatingLines } from 'react-loader-spinner'
-import { MdRequestPage } from 'react-icons/md';
-import { FaCode } from 'react-icons/fa';
+import { MdDelete, MdRequestPage } from 'react-icons/md';
+import { FaCode, FaUserMinus } from 'react-icons/fa';
 import { CiLink } from 'react-icons/ci';
 import { useTheme } from '../Theme/ThemeContext';
+import { HiOutlineDotsVertical } from 'react-icons/hi';
+import { Link } from 'react-router-dom';
 
 const customStyles = {
   content: {
@@ -49,12 +41,14 @@ const customStylesProject = {
     transform: 'translate(-50%, -50%)',
   },
 };
+
 export const Home = () => {
   const db = getDatabase();
   const {darkMode} = useTheme();
 
   // State declarations
   const [modalIsOpen, setIsOpen] = useState(false);
+  const [deleteproject, setdeleteproject] = useState (false);
   const [projectShowModal, setprojectShowModal] = useState(false);
   const [image, setimage] = useState (false);
   const [project, setproject] = useState ([]);
@@ -73,7 +67,10 @@ export const Home = () => {
   const [projetLiveLinkInputError, setprojetLiveLinkInputError] = useState(false);
 
   const openModal = () => setIsOpen(true);
-  const closeProjectModal = () => setprojectShowModal(false);
+  const closeProjectModal = () =>{
+    setprojectShowModal(false);
+    setdeleteproject(false);
+  }
   const closeModal = () => setIsOpen(false);
   const handleOnChangeImage = (event) => {
     const file = event.target.files[0];
@@ -176,7 +173,7 @@ export const Home = () => {
 // ================handleimage function implement
 const handleimage =((item) =>{
   setprojectShowModal(true);
-  setitemProject(item)
+  setitemProject(item);
 });
  
 useEffect (() => {
@@ -193,32 +190,48 @@ useEffect (() => {
 
 // const projectObject = project.find((item) => item.ProjectImage);
 
-// const handleDeleteProject = ((projectItem = {}) =>{
-//   console.log(projectItem, 'amr sonar bangla');
-  
-//   const ProjectRemove = projectref(db, "Project/" + projectItem.friendkey);
-//   remove(ProjectRemove).then(() => {
+const handledeletebutton = (() =>{
+  setdeleteproject(!deleteproject);
  
-//   }).catch(() => {
-//       console.log("something error");
-//   });
-// })
+});
+const handleDelete =((itemProject = {}) =>{
+ const ProjectRemove = projectref(db, "Project/" + itemProject.projectKey);
+  remove(ProjectRemove).then(() => {
+    setprojectShowModal(false);
+    SuccessToast(`${itemProject.ProjectName} Project Delete successful`)
+  }).catch((err) => {
+      ErrorToast(err);
+  });
+});
+
+
+useEffect(() => {
+  if (darkMode) {
+    document.body.classList.add("dark-mode");
+  } else {
+    document.body.classList.remove("dark-mode");
+  }
+}, [darkMode]);
+
 
 
   return (
-    <div className={`${!darkMode ? 'Day-Background' : 'Night-Background'} w-full h-full flex justify-center items-center flex-col`}>
+<div>
+<div className=' fixed top-5 left-10'>
+  <Link to={'/'}><h2 className='relative loadingtext after:absolute after:w-full after:h-full after:top-0 after:left-0 after:text-3xl after:cursor-pointer after:text-blue-500 after:font-semibold after:font-Inkut'></h2></Link>
+</div>
+<div className={`${!darkMode ? 'Day-Background' : 'Night-Background'} w-full min-h-screen flex justify-center items-center flex-col`}>
       <div className='my-16'>
         <h2 className={`${!darkMode ? 'day-text' : 'night-text'} text-6xl font-black font-Inkut uppercase`}>
           My <span className='text-blue-500'>Portfolio</span>
         </h2>
       </div>
-      <div className='flex justify-center items-center gap-x-6 mb-8'>
-        <span className={`${!darkMode ? 'day-text' : 'night-text'} text-xl font-Inkut font-semibold cursor-pointer`}>My Project</span>
-        <span className={`${!darkMode ? 'day-text' : 'night-text'} text-xl text-black font-Inkut font-semibold cursor-pointer`}>Exam Project</span>
-      </div>
       <div className='w-[80%] flex justify-center items-center flex-wrap gap-7'>
-        <div className='w-[320px] h-[197px] cursor-pointer flex justify-center items-center rounded-lg bg-gray-300' onClick={openModal}>
+        <div className='w-[320px] h-[197px] overflow-hidden relative zoom-div cursor-pointer flex justify-center items-center rounded-lg bg-gray-300' onClick={openModal}>
           <span className='text-5xl text-gray-500'><FiUpload /></span>
+          <div className=''>
+        <h2 className='zoom-image-text w-full h-full flex justify-center items-center text-[18px] text-white font-Poppins font-semibold uppercase absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  opacity-0 bg-[#ffb400] transition-all duration-500'><span className='w-full h-full text-5xl text-white flex justify-center items-center translate-y-[20px]'><FiUpload /></span></h2>
+      </div>
         </div>
         {project?.length > 0 ? (
   project.map((item, index) => (
@@ -233,13 +246,13 @@ useEffect (() => {
         />
       </picture>
       <div className=''>
-        <h2 className='zoom-image-text w-full h-full flex justify-center items-center text-[18px] text-white font-Poppins font-semibold uppercase absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  opacity-0 bg-[#ffb400] transition-all duration-500'><span className='w-full h-full flex justify-center items-center translate-y-[-20px]'>Project Name</span></h2>
-      </div>
+        <h2 className='zoom-image-text w-full h-full flex justify-center items-center text-[18px] text-white font-Poppins font-semibold uppercase absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  opacity-0 bg-[#ffb400] transition-all duration-500'><span className='w-full h-full flex justify-center items-center translate-y-[-20px]'>{item?.ProjectName}</span></h2>
+      </div>    
     </div>
 
   ))
 ) : (
-  <div className='w-full h-full flex justify-center items-center'>
+  <div className='w-full flex justify-center items-center'>
     <h2 className='text-xl text-red-400 font-Poppins font-medium'>Upload Your Project</h2>
   </div>
 )}
@@ -250,12 +263,12 @@ useEffect (() => {
           isOpen={modalIsOpen}
           style={customStyles}
          >
-          <button className='w-full h-full flex justify-end text-2xl text-red-500' onClick={closeModal}>
+                    <button className='w-full h-full flex justify-end text-3xl text-red-500' onClick={closeModal}>
             <RxCross2 />
           </button>
           <div>
             <div className='mb-10'>
-              <h2 className='text-4xl text-black font-Inkut font-extrabold text-center'>
+              <h2 className={`${!darkMode ? 'day-text' : 'night-text' } text-4xl font-Inkut font-extrabold text-center`}>
                 Upload <span className='text-blue-500'>Project</span>
               </h2>
             </div>
@@ -263,55 +276,55 @@ useEffect (() => {
               <div className='flex flex-col gap-y-5'>
                 <div className='flex justify-between items-center gap-x-8'>
                   <div className='flex items-center gap-x-3 w-full'>
-                    <label className='text-base text-black font-semibold font-Poppins'>Project Name :</label>
+                    <label className={`${!darkMode ? 'day-text' : 'night-text' } text-base font-semibold font-Poppins`}>Project Name :</label>
                     <input
                       type='text'
                       name='name'
                       id='name'
-                      className={`${!projectNameInputError? 'border-gray-400' : 'border-red-400'} flex-grow outline-0 border-[1px] rounded-md px-3 py-[4px]`}
+                      className={`${!projectNameInputError? 'border-gray-400' : '!border-red-400'} ${!darkMode ? 'text-black' : 'inputboxshadow text-white'} flex-grow outline-0 border-[1px] rounded-md px-3 py-[4px]`}
                       onChange={((e) => setprojectNameinput(e.target.value))}
                       value={projectNameInput}
                     />
                   </div>
                   <div className='flex items-center gap-x-3 w-full'>
-                    <label className='text-base text-black font-semibold font-Poppins'>Project Type :</label>
+                    <label className={`${!darkMode ? 'day-text' : 'night-text' } text-base font-semibold font-Poppins`}>Project Type :</label>
                     <select
                       name='projectType'
                       id='projectType'
-                      className={`${!projectTypeInputError? 'border-gray-400' : 'border-red-400'} flex-grow outline-0 border-[1px] rounded-md border-gray-400 px-3 py-[4px] h-[33px] text-base text-black font-medium font-Poppins`}
+                      className={`${!projectTypeInputError? 'border-gray-400' : 'border-red-400'} ${!darkMode ? 'text-black' : 'inputboxshadow text-white'} flex-grow outline-0 border-[1px] rounded-md border-gray-400 px-3 py-[4px] h-[33px] text-base text-black font-medium font-Poppins`}
                     defaultValue={''}
                     value={projectTypeInput}
                       onChange={((e) => setprojectTypeInput(e.target.value))}
                     >
-                      <option className='text-base font-Inkut font-medium text-black' value="" disabled hidden>Choose Project Type</option>
-                      <option className='text-base font-Inkut font-medium text-black' value='client Project'>Client Project</option>
-                      <option className='text-base font-Inkut font-medium text-black' value='personal Project'>Personal Project</option>
+                      <option className={`${!darkMode ? 'text-black' : 'text-white'} text-base font-Inkut font-medium`} value="" disabled hidden>Choose Project Type</option>
+                      <option className={`${!darkMode ? 'text-black' : 'text-white'} text-base font-Inkut font-medium`} value='client Project'>Client Project</option>
+                      <option className={`${!darkMode ? 'text-black' : 'text-white'} text-base font-Inkut font-medium`} value='personal Project'>Personal Project</option>
                     </select>
                   </div>
                 </div>
                 <div className='flex justify-between items-center gap-x-8'>
                   <div className='flex items-center gap-x-3 w-full'>
-                    <label className='text-base text-black font-semibold font-Poppins'>Language :</label>
+                    <label className={`${!darkMode ? 'day-text' : 'night-text' } text-base font-semibold font-Poppins`}>Language :</label>
                     <select
                       name='projectLanguage'
                       id='projectLanguage'
-                      className={`${!projectLanguageInputError? 'border-gray-400' : 'border-red-400'} flex-grow outline-0 border-[1px] rounded-md border-gray-400 px-3 py-[4px] h-[33px] text-base text-black font-medium font-Poppins`}
+                      className={`${!projectLanguageInputError? 'border-gray-400' : 'border-red-400'} ${!darkMode ? 'text-black' : 'inputboxshadow text-white'} flex-grow outline-0 border-[1px] rounded-md border-gray-400 px-3 py-[4px] h-[33px] text-base text-black font-medium font-Poppins`}
                       defaultValue={''}
                       onChange={((e) => setprojectLanguageInput(e.target.value))}
                       value={projectLanguageInput}
                     >
-                      <option className='text-base font-Inkut font-medium text-black' value="" disabled hidden>Choose Project Language</option>
-                      <option className='text-base font-Inkut font-medium text-black' value='HTML / CSS'>HTML / CSS</option>
-                      <option className='text-base font-Inkut font-medium text-black' value='REACT'>REACT</option>
+                      <option className={`${!darkMode ? 'text-black' : 'text-white'} text-base font-Inkut font-medium`} value="" disabled hidden>Choose Project Language</option>
+                      <option className={`${!darkMode ? 'text-black' : 'text-white'} text-base font-Inkut font-medium`} value='HTML / CSS'>HTML / CSS</option>
+                      <option className={`${!darkMode ? 'text-black' : 'text-white'} text-base font-Inkut font-medium`} value='REACT'>REACT</option>
                     </select>
                   </div>
                   <div className='flex items-center gap-x-3 w-full'>
-                    <label className='text-base text-black font-semibold font-Poppins'>Live Link :</label>
+                    <label className={`${!darkMode ? 'day-text' : 'night-text' } text-base font-semibold font-Poppins`}>Live Link :</label>
                     <input
                       type='text'
                       name='name'
                       id='name'
-                      className={`${!projetLiveLinkInputError? 'border-gray-400' : 'border-red-400'} flex-grow outline-0 border-[1px] rounded-md border-gray-400 px-3 py-[4px]`}
+                      className={`${!projetLiveLinkInputError? 'border-gray-400' : 'border-red-400'} ${!darkMode ? 'text-black' : 'inputboxshadow text-white'} flex-grow outline-0 border-[1px] rounded-md border-gray-400 px-3 py-[4px]`}
                       onChange={((e) => setprojetLiveLinkInput(e.target.value))}
                       value={projetLiveLinkInput}
                     />
@@ -373,14 +386,29 @@ wrapperClass=""
           contentLabel="Example Modal"
         >
           <div className='flex justify-between items-center'>
-          <button className='w-full h-full flex justify-end text-2xl text-red-500' onClick={closeProjectModal}>
+            <div className='relative'>
+            <button className={`${!darkMode ? 'day-text' : 'night-text' } text-[22px]`} onClick={handledeletebutton} >      
+      <HiOutlineDotsVertical/>
+      </button>
+      {!deleteproject ? ('') : (
+                  <div className={`${!darkMode ? 'Day-Background' : 'Night-Background shadow-button-night-shadow' } absolute top-[5px] right-[-170px] w-[170px] flex flex-col justify-center items-center py-[10px] bg-white shadow-day-span-shadow rounded-lg z-20`}>
+                       <button className='text-gray-400 hover:text-commonBackground font-medium font-openSans text-[16px] w-full flex items-center py-[4px] hover:bg-[#8080803d] group' onClick={() =>handleDelete(itemProject)}>
+                           <span className={`${!darkMode ? 'day-text' : 'night-text' } text-[18px] pl-[15px] pr-[10px] group-hover:text-commonBackground`}><MdDelete /></span> Delete
+                       </button>
+                  </div>
+      )}
+
+            </div>
+            <div>
+            <button className='w-full h-full flex justify-end text-3xl text-red-500' onClick={closeProjectModal}>
             <RxCross2 />
           </button>
+            </div>
           </div>
           
           <div>
             <div className='mb-10'>
-              <h2 className='text-4xl text-black font-Inkut font-extrabold text-center uppercase'>
+              <h2 className={`${!darkMode ? 'day-text' : 'night-text' } text-4xl font-Inkut font-extrabold text-center uppercase`}>
                 My <span className='text-blue-500'>Project</span>
               </h2>
             </div>
@@ -388,40 +416,40 @@ wrapperClass=""
             <div className='flex justify-between items-center'> 
             <div className='flex gap-x-[5px]'>
             <div className='flex items-center gap-[5px]'>
-            <span className=' text-[18px] text-black'><MdRequestPage/></span>
-                    <span className='text-base text-black font-normal font-Poppins'>Project Name :</span>
+            <span className={`${!darkMode ? 'day-text' : 'night-text' } text-[18px]`}><MdRequestPage/></span>
+                    <span className={`${!darkMode ? 'day-text' : 'night-text' } text-base font-normal font-Poppins`}>Project Name :</span>
             </div>
             <div>
-              <h3 className={`text-base text-black font-semibold font-Poppins`}>{itemProject?.ProjectName}</h3>
+              <h3 className={`${!darkMode ? 'day-text' : 'night-text' } text-base font-semibold font-Poppins`}>{itemProject?.ProjectName}</h3>
             </div>
             </div>
             <div className='flex gap-x-[5px]'>
             <div className='flex items-center gap-[5px]'>
-            <span className=' text-[18px] text-black'><IoPerson/></span>
-                    <span className='text-base text-black font-normal font-Poppins'>Client Name :</span>
+            <span className={`${!darkMode ? 'day-text' : 'night-text' } text-[18px]`}><IoPerson/></span>
+                    <span className={`${!darkMode ? 'day-text' : 'night-text' } text-base font-normal font-Poppins`}>Client Name :</span>
             </div>
             <div>
-              <h3 className={`text-base text-black font-semibold font-Poppins`}>{itemProject?.ProjectType}</h3>
+              <h3 className={`${!darkMode ? 'day-text' : 'night-text' } text-base font-semibold font-Poppins`}>{itemProject?.ProjectType}</h3>
             </div>
             </div>
             </div>
             <div className='flex justify-between items-center'> 
             <div className='flex gap-x-[5px]'>
             <div className='flex items-center gap-[5px]'>
-            <span className=' text-[18px] text-black'><FaCode/></span>
-                    <span className='text-base text-black font-normal font-Poppins'>Language :</span>
+            <span className={`${!darkMode ? 'day-text' : 'night-text' } text-[18px]`}><FaCode/></span>
+                    <span className={`${!darkMode ? 'day-text' : 'night-text' } text-base font-normal font-Poppins`}>Language :</span>
             </div>
             <div>
-              <h3 className={`text-base text-black font-semibold font-Poppins`}>{itemProject?.ProjectLanguage}</h3>
+              <h3 className={`${!darkMode ? 'day-text' : 'night-text' } text-base font-semibold font-Poppins`}>{itemProject?.ProjectLanguage}</h3>
             </div>
             </div>
             <div className='flex gap-x-[5px]'>
             <div className='flex items-center gap-[5px]'>
-            <span className=' text-[18px] text-black'><CiLink/></span>
-                    <span className='text-base text-black font-normal font-Poppins'>Live Link :</span>
+            <span className={`${!darkMode ? 'day-text' : 'night-text' } text-[18px]`}><CiLink/></span>
+                    <span className={`${!darkMode ? 'day-text' : 'night-text' } text-base font-normal font-Poppins`}>Live Link :</span>
             </div>
             <div>
-              <a href={itemProject?.ProjectLiveLink} className={`text-base text-black font-semibold font-Poppins`}>{'www.website.com'}</a>
+              <a href={itemProject?.ProjectLiveLink} className={`${!darkMode ? 'day-text' : 'night-text' } text-base font-semibold font-Poppins`}>{'www.website.com'}</a>
             </div>
             </div>
             </div>
@@ -431,7 +459,9 @@ wrapperClass=""
             </div>
           </div>
         </Modal>}
+       
     </div>
+</div>
   );
 };
 

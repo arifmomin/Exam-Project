@@ -75,8 +75,13 @@ const handleSignUp = () => {
     setemailError('');
     setpasswordError('Please enter your password.');
   }else if(!isPasswordValid(Password)){
+    setfullNameError('');
+    setemailError('');
     setpasswordError('password must be 8 charecter');
   }else if (!Checkbox){
+    setfullNameError('');
+    setemailError('');
+    setpasswordError('');
     setCheckboxError(!Checkbox);
   }else {
     setloading(true);
@@ -176,7 +181,7 @@ const handleCheckbox = () =>{
           <label htmlFor="floating_password" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Password</label>
           <span className='absolute bottom-[-22px] left-0 block text-red-500 font-medium font-Poppins text-base'>{passwordError}</span>
           <div
-            className='cursor-pointer w-[25px] absolute top-[26%] right-0'
+            className={`${!darkMode ? 'daypath' : 'nightpath'} cursor-pointer w-[25px] absolute top-[26%] right-0`}
             ref={animationContainer}
             onClick={toggleEyeAnimation}
           ></div>

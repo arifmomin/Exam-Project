@@ -103,17 +103,33 @@ animation: 15s linear imganimation infinite;
     background-size: cover;
   }
 }
+.inputboxshadow{
+  border: 2px solid #191B1E;
+      background: #191B1E;
+      box-shadow: -1px -3px 3px 0px rgba(255, 255, 255, 0.20) inset, 1px 4px 2px -1px rgba(0, 0, 0, 0.70) inset;
+}
 .Day-Background{
-  background: white;
+  background: white !important;
 }
 .Night-Background{
-  background: #212428;
+  background: #212428 !important;
 }
 .day-text{
   color: black;
 }
 .night-text{
   color: white;
+}
+.dark-mode .ReactModal__Overlay{
+  background: #212428 !important;
+}
+.dark-mode .ReactModal__Content{
+  box-shadow: 10px 10px 19px #1c1e22, -10px -10px 19px #262a2e !important;
+  background : linear-gradient(145deg, #1E2024 0%, #23272B 50%) !important;
+  border: none !important;
+}
+.dark-mode .ReactModal__Content:hover{
+    background: linear-gradient(to right bottom, #212428, #16181c) !important;
 }
 .rotate{
   animation: .3s linear theme;
@@ -142,7 +158,7 @@ animation: 15s linear imganimation infinite;
   stroke: #3B82F6;
 }
 .redpath path{
-  stroke: red;
+  stroke: red !important;
 }
 
 .Fire-Text{
@@ -234,4 +250,69 @@ animation: 15s linear imganimation infinite;
 }
 .zoom-div:hover .zoom-image-text span{
   transform: translateY(0);
+}
+
+.btn:hover{
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+.btn:hover .box::after{
+  transform: translateX(0%);
+  transition: .5s transform linear, .3s height linear .5s;
+  height: 100%;
+}
+.btn:hover .box::before{
+  transform: translateX(0%);
+  height: 100%;
+  transition: .5s transform linear, .3s height linear .5s;
+}
+.main-button{
+  transition: ease-in-out .3s;
+}
+.main-item:hover .main-button{
+  opacity: 100;
+}
+.main-icon{
+  transition: all linear .4s;
+}
+.main-icon:hover {
+  transform: translateX(-5px);
+}
+.main-item .facebook:hover{
+  background: #1877F2 !important;
+  color: white;
+}
+.main-item .twitter:hover{
+  background: #1DA1F2 !important;
+  color: white;
+}
+.main-item .instagram:hover{
+  background: linear-gradient(45deg, #F58529, #FEDA77, #DD2A7B, #8134AF, #515BD4);
+  color: white;
+}
+.main-address{
+  transform: translateY(-20px);
+  transition: all .5s ease .1s;
+}
+.main-item:hover .main-address{
+  opacity: 100;
+  transform: translateY(0px);
+}
+.loadingtext::after{
+  animation: 3s linear infinite animation;
+
+}
+@keyframes animation{
+  0%{
+      content: 'L';
+  }20%{
+      content: 'LO';
+  }40%{
+      content: 'LOG';
+  }60%{
+      content: 'LOGO';
+  }80%{
+      content: 'LOGOU';
+  }100%{
+      content: 'LOGOUT';
+  }
 }

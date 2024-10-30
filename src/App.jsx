@@ -10,11 +10,12 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import { Home } from './Home/Home.jsx';
+import Welcome from './WeclomePage/Welcome.jsx'
 const App = () => {
 
 const router = createBrowserRouter ([{
   path: '/',
-  element : 'nothing is here'
+  element : <Welcome/>
 },
   {
     path: 'registration/',

@@ -1,10 +1,10 @@
-import React, {useRef, useState, useEffect} from 'react'
-import { useTheme } from '../../../Theme/ThemeContext'
+import React, { useRef, useState, useEffect } from 'react';
+import { useTheme } from '../../../Theme/ThemeContext';
 import lottie from 'lottie-web';
 import EyeLottieAnimation from '../../../../Utilities/Lotties/Eye.json';
 import Logo from './LoginLeftImage/Logo.png';
-import darkmodeLogo from './LoginLeftImage/darkmodeLogo.png'
-import Checkbox from '../../../../Utilities/Lotties/Checkbox.json'
+import darkmodeLogo from './LoginLeftImage/darkmodeLogo.png';
+import Checkbox from '../../../../Utilities/Lotties/Checkbox.json';
 import { isemailValid, isPasswordValid } from '../../../../Utilities/Validation/Validation';
 import { CgDanger } from 'react-icons/cg';
 import { RotatingLines } from 'react-loader-spinner';
@@ -12,167 +12,169 @@ import { ErrorToast, SuccessToast } from '../../../../Utilities/Toastify/Toastif
 import { Link } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
 import { FaFacebook } from 'react-icons/fa';
-import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, FacebookAuthProvider  } from "firebase/auth";
-import { push,getDatabase, ref, set } from 'firebase/database';
+import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, FacebookAuthProvider } from "firebase/auth";
+import { push, getDatabase, ref, set } from 'firebase/database';
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
+
 const LoginLeft = () => {
-const auth = getAuth()
-const db = getDatabase();
-const Navigate = useNavigate();
-const {darkMode} = useTheme();
-const animationContainer = useRef(null);
-const animationInstance = useRef(null);
-const checkboxanimationContainer = useRef(null);
-const checkboxanimation = useRef(null);
-const [isEyeOpen, setIsEyeOpen] = useState(false);
-const [checkbox, setcheckbox] = useState(true);
-const [loading, setloading] = useState(false);
-const [logininput, setlogininput] = useState ({
+    const auth = getAuth();
+    const db = getDatabase();
+    const Navigate = useNavigate();
+    const { darkMode } = useTheme();
+    const animationContainer = useRef(null);
+    const animationInstance = useRef(null);
+    const checkboxanimationContainer = useRef(null);
+    const checkboxanimation = useRef(null);
+    const [isEyeOpen, setIsEyeOpen] = useState(false);
+    const [checkbox, setcheckbox] = useState(true);
+    const [checkboxError, setcheckboxError] = useState(false);
+    const [loading, setloading] = useState(false);
+    const [logininput, setlogininput] = useState({
         email: "",
-        password : "",
+        password: "",
     });
-const [loginError, setloginError] = useState ({
-  emailError : '',
-  passwordError : '',
-})    
-
-
-const handleinput = (event) =>{
-    const {id, value} = event.target;
-    setlogininput({
-        ...logininput,
-        [id] : value,
+    const [loginError, setloginError] = useState({
+        emailError: '',
+        passwordError: '',
     });
-};
 
-const handleSignin = (() =>{
-  const {email , password} = logininput;
-  if(!email || !isemailValid){
-    setloginError({
-      ...loginError,
-      emailError: 'Please enter a valid Email.',
+    const handleinput = (event) => {
+        const { id, value } = event.target;
+        setlogininput({
+            ...logininput,
+            [id]: value,
+        });
+    };
+
+    const handleSignin = (() => {
+        const { email, password } = logininput;
+        // Email validation
+        if (!email || !isemailValid) {
+            setloginError({
+                ...loginError,
+                emailError: 'Please enter a valid Email.',
+            });
+        } else if (!password || !isPasswordValid) {
+            setloginError({
+                ...loginError,
+                emailError: '',
+                passwordError: 'Please enter your correct password',
+            });
+        } else if (checkbox) {
+            setloginError({
+                ...loginError,
+                emailError: '',
+                passwordError: '',
+            });
+            setcheckbox(checkbox);
+            setcheckboxError(true);
+        } else {
+            setcheckboxError(false);
+            setloading(true);
+            setloginError({
+                ...loginError,
+                emailError: '',
+                passwordError: '',
+            });
+            signInWithEmailAndPassword(auth, email, password)
+                .then(() => {
+                    SuccessToast('Log In Successful');
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    ErrorToast(errorCode);
+                }).finally(() => {
+                    setloading(false);
+                    setlogininput({ ...logininput, email: "", password: "" });
+                    setloginError({ ...loginError, emailError: '', passwordError: '' });
+                    setcheckbox(true);
+                    checkboxanimation.current.playSegments([10, 0], false);
+                });
+        }
     });
-  }else if(!password || !isPasswordValid){
-    setloginError({
-      ...loginError,
-      emailError: '',
-      passwordError: 'Please enter your correct password',
+
+    // Google login handler
+    const handleGoogleLogin = (() => {
+        const provider = new GoogleAuthProvider();
+        signInWithPopup(auth, provider)
+            .then((result) => {
+                const credential = GoogleAuthProvider.credentialFromResult(result);
+                const token = credential.accessToken;
+                const user = result.user;
+                return user;
+            }).then((user) => {
+                const { displayName, email, localId, photoUrl } = user.reloadUserInfo;
+                const UserRef = ref(db, 'users/');
+                set(push(UserRef), {
+                    userUid: localId,
+                    userName: displayName,
+                    userEmail: email,
+                    userPhotoUrl: photoUrl ? photoUrl : null,
+                    CreateAtt: moment().format("MM DD YYYY, h:mm:ss a")
+                });
+            }).then(() => {
+                SuccessToast('Log In Successful');
+                Navigate('/home');
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                ErrorToast(errorCode);
+                console.log('error occurred');
+            });
     });
-  }else if(checkbox){
-    alert('checkbox click');
-  } else{
-    setloading(true);
-    setloginError({
-      ...loginError,
-      emailError: '',
-      passwordError: '',
-    });
-    signInWithEmailAndPassword(auth, email, password)
-  .then(() => {
-   SuccessToast('Log In Sucessful');
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    ErrorToast(errorCode);
 
-  }).finally(() =>{
-    setloading(false);
-    setlogininput({ ...logininput, email: "", password : "" });
-  setloginError({ ...loginError, emailError: '', passwordError: ''});
-  setcheckbox(false)
-  console.log('log in done', checkbox);
-  })
-  }
-});
-// ================ google log in 
-const handleGoogleLogin = (() =>{
-  const provider = new GoogleAuthProvider();
-  signInWithPopup(auth, provider)
-  .then((result) => {
-    const credential = GoogleAuthProvider.credentialFromResult(result);
-    const token = credential.accessToken;
-    const user = result.user;
-      return user;
+    const handleFacebookLogin = () => {
+        const provider = new FacebookAuthProvider();
+        signInWithPopup(auth, provider)
+            .then((result) => {
+                const user = result.user;
+                SuccessToast('Log in successful')
+            })
+            .catch((error) => {
+                ErrorToast(error);
+            });
+    };
 
-  }).then((user) =>{
-    const {displayName , email, localId, photoUrl} = user.reloadUserInfo;    
-    const UserRef = ref(db, 'users/');
-    set(push(UserRef) , {
-      userUid : localId,
-      userName: displayName,
-      userEmail: email,
-      userPhotoUrl : photoUrl ? photoUrl : null,
-      CreateAtt : moment().format(" MM DD YYYY, h:mm:ss a")
-    })
-  }).then(() =>{
-    SuccessToast('Log In Successful');
-    Navigate('/home');
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    ErrorToast(errorCode)
-    console.log('eoor khaiso');
-    
-  });
-})
-const handleFacebookLogin = (() =>{
-  // const provider = new FacebookAuthProvider();
-  // signInWithPopup(auth, provider)
-  // .then((result) => {
-  //   const user = result.user;
-  //   const credential = FacebookAuthProvider.credentialFromResult(result);
-  //   const accessToken = credential.accessToken;
+    // Lottie animations setup
+    useEffect(() => {
+        animationInstance.current = lottie.loadAnimation({
+            container: animationContainer.current,
+            renderer: 'svg',
+            loop: false,
+            autoplay: true,
+            animationData: EyeLottieAnimation,
+        });
+        checkboxanimation.current = lottie.loadAnimation({
+            container: checkboxanimationContainer.current,
+            renderer: 'svg',
+            loop: false,
+            autoplay: false,
+            animationData: Checkbox,
+        });
+        return (() => {
+            animationInstance.current.destroy();
+            checkboxanimation.current.destroy();
+        });
+    }, []);
 
-  // })
-  // .catch((error) => {
-  //   const errorCode = error.code;
-  //   ErrorToast(errorCode);
-  // });
-  alert('asdf')
-})
+    const toggleEyeAnimation = () => {
+        if (isEyeOpen) {
+            animationInstance.current.playSegments([0, 25], true);
+        } else {
+            animationInstance.current.playSegments([10, 0], true);
+        }
+        setIsEyeOpen(!isEyeOpen);
+    };
 
-/**
- * todo: Lotties animation
- */
-useEffect(() => {
-    animationInstance.current = lottie.loadAnimation({
-      container: animationContainer.current,
-      renderer: 'svg',
-      loop: false,
-      autoplay: true,
-      animationData: EyeLottieAnimation,
-    });
-    checkboxanimation.current = lottie.loadAnimation({
-        container: checkboxanimationContainer.current,
-        renderer: 'svg',
-        loop: false,
-        autoplay: false,
-        animationData: Checkbox,
-      });
-    return (() =>{
-        animationInstance.current.destroy();
-        checkboxanimation.current.destroy();
-    }) 
-  }, []);
-
-  const toggleEyeAnimation = () => {
-      if (isEyeOpen) {
-        animationInstance.current.playSegments([0, 25], true);
-      } else {
-        animationInstance.current.playSegments([10, 0], true);
-      }
-      setIsEyeOpen(!isEyeOpen); 
-  };
-  const toggleCheckboxAnimation = () => {
-    if (checkbox) {
-        checkboxanimation.current.playSegments([0, 25], true);
-    } else {
-        checkboxanimation.current.playSegments([10, 0], false);
-    }
-    setcheckbox(!checkbox);
-};
-
+    const toggleCheckboxAnimation = () => {
+        if (checkbox) {
+            checkboxanimation.current.playSegments([0, 25], true);
+        } else {
+            checkboxanimation.current.playSegments([10, 0], false);
+        }
+        setcheckbox(!checkbox);
+    };
   return (
     <div className='w-[55%]'>
         <form className="max-w-md mx-auto w-full" onSubmit={(e) => e.preventDefault()}>
@@ -222,8 +224,8 @@ useEffect(() => {
         </div>
         <div className='flex justify-between items-center mb-8 mt-5'>
             <div className='flex justify-start items-center gap-x-1'>
-            <div onClick={toggleCheckboxAnimation} ref={checkboxanimationContainer} className={`${!darkMode ? 'daypath' : 'nightpath'} cursor-pointer w-7 h-7`}></div>
-            <h3 className={`${!darkMode ? '' : 'text-[#b9b9b9]'} ${ checkbox ? 'text-[#6C7275]' : 'text-blue-500'} text-base font-normal font-Poppins`}>
+            <div onClick={toggleCheckboxAnimation} ref={checkboxanimationContainer} className={`${!darkMode ? 'daypath' : 'nightpath'} ${checkboxError ? 'redpath' : 'dfsdf'} cursor-pointer w-7 h-7`}></div>
+            <h3 className={`${!darkMode ? '' : 'text-[#b9b9b9]'} ${ checkbox ? 'text-[#6C7275]' : 'text-blue-500'}  text-base font-normal font-Poppins`}>
             Remember me
             </h3>
             </div>
