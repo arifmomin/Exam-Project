@@ -9,7 +9,7 @@ import moment from 'moment';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import {RotatingLines } from 'react-loader-spinner'
 import { MdDelete, MdRequestPage } from 'react-icons/md';
-import { FaCode, FaUserMinus } from 'react-icons/fa';
+import { FaCode } from 'react-icons/fa';
 import { CiLink } from 'react-icons/ci';
 import { useTheme } from '../Theme/ThemeContext';
 import { HiOutlineDotsVertical } from 'react-icons/hi';

@@ -129,7 +129,8 @@ const LoginLeft = () => {
         signInWithPopup(auth, provider)
             .then((result) => {
                 const user = result.user;
-                SuccessToast('Log in successful')
+                SuccessToast('Log in successful');
+                Navigate('/home')
             })
             .catch((error) => {
                 ErrorToast(error);

@@ -26,11 +26,10 @@ const RegistrationRight = () => {
   const [Checkbox, setCheckbox] = useState (false);
   const [CheckboxError, setCheckboxError] = useState (false);
   const [loading, setloading] = useState (false);
-  const { darkMode } = useTheme();
-  // ===========Error handaling
   const [fullNameError, setfullNameError] = useState('');
   const [emailError, setemailError] = useState('');
   const [passwordError, setpasswordError] = useState('');
+  const { darkMode } = useTheme();
 
 /**
  * todo: Lotties animation
@@ -125,9 +124,6 @@ const handleSignUp = () => {
 const handleCheckbox = () =>{
   setCheckbox(!Checkbox)
 };
-
-
-
   return (
     <div className={`w-[50%] h-full flex justify-center items-center`}>
       <form className="max-w-md mx-auto w-full" onSubmit={(e) => e.preventDefault()}>
