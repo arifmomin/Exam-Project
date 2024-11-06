@@ -80,6 +80,8 @@ const LoginLeft = () => {
             signInWithEmailAndPassword(auth, email, password)
                 .then(() => {
                     SuccessToast('Log In Successful');
+                }).then(() =>{
+                    Navigate('/home')
                 })
                 .catch((error) => {
                     const errorCode = error.code;

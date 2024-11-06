@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { FiUpload } from 'react-icons/fi';
 import { RxCross2 } from 'react-icons/rx';
@@ -131,8 +131,7 @@ export const Home = () => {
       setPreviewImageError(false);
       setprojectLanguageInputError(false);
       setprojetLiveLinkInputError(false);
-    }
-     else {
+    }else {
       setloading(true);
       setprojectNameinputError(false);
       setprojectTypeInputError(false);
@@ -199,6 +198,8 @@ const handleDelete =((itemProject = {}) =>{
   remove(ProjectRemove).then(() => {
     setprojectShowModal(false);
     SuccessToast(`${itemProject.ProjectName} Project Delete successful`)
+  }).then(() =>{
+    setdeleteproject(false);
   }).catch((err) => {
       ErrorToast(err);
   });
@@ -455,7 +456,7 @@ wrapperClass=""
             </div>
             </div>
             <div className='w-full modalimageParrent'>
-              <picture><img className='w-full rounded-lg mt-8 cursor-pointer modalimage' src={itemProject?.ProjectImage} alt={itemProject?.ProjectImage} /></picture>
+              <picture><img className='w-full max-h-[400px] object-cover rounded-lg mt-8 cursor-pointer modalimage' src={itemProject?.ProjectImage} alt={itemProject?.ProjectImage} /></picture>
             </div>
           </div>
         </Modal>}
