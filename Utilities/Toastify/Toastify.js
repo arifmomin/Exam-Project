@@ -39,5 +39,6 @@ const ErrorToast = (message = 'Something is happening' , position = 'top-right',
         transition: Bounce,
         });
 };
+console.log('amr nme');
 
 export { SuccessToast, infoToast, ErrorToast};

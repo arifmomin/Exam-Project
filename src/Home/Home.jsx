@@ -205,6 +205,8 @@ const handleDelete =((itemProject = {}) =>{
   });
 });
 
+console.log(deleteproject);
+console.log('asldkfjl');
 
 useEffect(() => {
   if (darkMode) {
@@ -213,8 +215,7 @@ useEffect(() => {
     document.body.classList.remove("dark-mode");
   }
 }, [darkMode]);
-
-
+console.log(darkMode, 'sdfsdf');
 
   return (
 <div>
